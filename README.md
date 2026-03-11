@@ -11,11 +11,11 @@ background service in **server mode** using `systemd`.
 
 ## Features
 
-- Detects OS and architecture automatically  
-- Downloads the **latest version** of PingTunnel  
-- Installs it into `/opt/pingtunnel`  
-- Creates a `systemd` service (`pingtunnel.service`)  
-- Starts and enables the service on boot  
+* Detects OS and architecture automatically  
+* Downloads the **latest version** of PingTunnel  
+* Installs it into `/opt/pingtunnel`  
+* Creates a `systemd` service (`pingtunnel.service`)  
+* Starts and enables the service on boot  
 
 ---
 
