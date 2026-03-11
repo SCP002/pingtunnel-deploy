@@ -24,7 +24,7 @@ background service in **server mode** using `systemd`.
 Run this command to install PingTunnel server:
 
 ```bash
-bash <(curl -Ls https://github.com/SCP002/pingtunnel-deploy/main/installer.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/SCP002/pingtunnel-deploy/main/installer.sh)
 ```
 
 ## Service Check
