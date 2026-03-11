@@ -78,7 +78,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/pingtunnel
-ExecStart=/opt/pingtunnel/pingtunnel -type server -key ${PINGTUNNEL_KEY}
+ExecStart=/opt/pingtunnel/pingtunnel ${EXEC_ARGS}
 Restart=on-failure
 
 [Install]
@@ -98,7 +98,13 @@ show_final_info() {
     echo "✅ Installation complete."
     echo "---------------------------"
     echo "Server IP : $SERVER_IP"
-    echo "Password  : $PINGTUNNEL_KEY"
+    if [[ "$AUTH_MODE" == "1" ]]; then
+        echo "Password key : $PINGTUNNEL_KEY"
+    else
+        echo "Password key : 0"
+        echo "Encrypt mode : $ENCRYPT_MODE"
+        echo "Encrypt key  : $ENCRYPT_KEY"
+    fi
     echo "---------------------------"
 }
 
@@ -108,15 +114,40 @@ main() {
         exit 1
     fi
     
-    # Prompt user for PingTunnel key
+    echo "Select authentication mode:"
+    echo "1) Numeric password key (-key)"
+    echo "2) Encryption key (-encrypt, -encrypt-key)"
     while true; do
-        read -p "Enter a Password (Key) for PingTunnel (-key, numbers only): " PINGTUNNEL_KEY
-        if [[ "$PINGTUNNEL_KEY" =~ ^[0-9]+$ ]]; then
+        read -p "Enter choice (1 or 2): " AUTH_MODE
+        if [[ "$AUTH_MODE" == "1" || "$AUTH_MODE" == "2" ]]; then
             break
         else
-            echo "❌ Please enter numbers only."
+            echo "❌ Invalid choice. Please enter 1 or 2."
         fi
     done
+
+    if [[ "$AUTH_MODE" == "1" ]]; then
+        while true; do
+            read -p "Enter a Password (Key) for PingTunnel (-key, numbers only): " PINGTUNNEL_KEY
+            if [[ "$PINGTUNNEL_KEY" =~ ^[0-9]+$ ]]; then
+                break
+            else
+                echo "❌ Please enter numbers only."
+            fi
+        done
+        EXEC_ARGS="-type server -nolog 1 -key ${PINGTUNNEL_KEY}"
+    else
+        while true; do
+            read -p "Enter encryption mode (aes128, aes256, chacha20): " ENCRYPT_MODE
+            if [[ "$ENCRYPT_MODE" == "aes128" || "$ENCRYPT_MODE" == "aes256" || "$ENCRYPT_MODE" == "chacha20" ]]; then
+                break
+            else
+                echo "❌ Invalid mode. Please enter aes128, aes256, or chacha20."
+            fi
+        done
+        read -p "Enter encryption key: " ENCRYPT_KEY
+        EXEC_ARGS="-type server -nolog 1 -key 0 -encrypt ${ENCRYPT_MODE} -encrypt-key ${ENCRYPT_KEY}"
+    fi
 
     install_pingtunnel
     create_service
