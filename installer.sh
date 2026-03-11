@@ -126,6 +126,8 @@ main() {
         fi
     done
 
+    EXEC_ARGS="-type server -nolog 1"
+
     if [[ "$AUTH_MODE" == "1" ]]; then
         while true; do
             read -p "Enter a Password (Key) for PingTunnel (-key, numbers only): " PINGTUNNEL_KEY
@@ -135,7 +137,7 @@ main() {
                 echo "❌ Please enter numbers only."
             fi
         done
-        EXEC_ARGS="-type server -nolog 1 -key ${PINGTUNNEL_KEY}"
+        EXEC_ARGS="${EXEC_ARGS} -key ${PINGTUNNEL_KEY}"
     else
         while true; do
             read -p "Enter encryption mode (aes128, aes256, chacha20): " ENCRYPT_MODE
@@ -146,7 +148,12 @@ main() {
             fi
         done
         read -p "Enter encryption key: " ENCRYPT_KEY
-        EXEC_ARGS="-type server -nolog 1 -key 0 -encrypt ${ENCRYPT_MODE} -encrypt-key ${ENCRYPT_KEY}"
+        EXEC_ARGS="${EXEC_ARGS} -key 0 -encrypt ${ENCRYPT_MODE} -encrypt-key ${ENCRYPT_KEY}"
+    fi
+
+    read -p "Enter proxy to forward TCP traffic (e.g., socks5://localhost:2080 or http://localhost:8080) [Leave empty for none]: " FORWARD_PROXY
+    if [[ -n "$FORWARD_PROXY" ]]; then
+        EXEC_ARGS="${EXEC_ARGS} -forward ${FORWARD_PROXY}"
     fi
 
     install_pingtunnel
