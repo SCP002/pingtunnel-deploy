@@ -83,6 +83,11 @@ install_pingtunnel() {
 create_service() {
     echo "Creating systemd service..."
 
+    EXEC_ARGS="-type server -nolog 1 -key ${PINGTUNNEL_KEY} -encrypt ${PINGTUNNEL_ENCRYPT} -encrypt-key ${PINGTUNNEL_ENCRYPT_KEY} -icmp_l ${PINGTUNNEL_ICMP_L}"
+    if [ -n "$PINGTUNNEL_FORWARD" ]; then
+        EXEC_ARGS="$EXEC_ARGS -forward ${PINGTUNNEL_FORWARD}"
+    fi
+
     cat <<EOF >/etc/systemd/system/pingtunnel.service
 [Unit]
 Description=PingTunnel Server
@@ -91,7 +96,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/pingtunnel
-ExecStart=/opt/pingtunnel/pingtunnel -type server -key ${PINGTUNNEL_KEY}
+ExecStart=/opt/pingtunnel/pingtunnel ${EXEC_ARGS}
 Restart=on-failure
 
 [Install]
@@ -110,8 +115,10 @@ show_final_info() {
     echo ""
     echo "Installation complete."
     echo "---------------------------"
-    echo "Server IP : $SERVER_IP"
-    echo "Password  : $PINGTUNNEL_KEY"
+    echo "Server IP   : $SERVER_IP"
+    echo "Key         : $PINGTUNNEL_KEY"
+    echo "Encrypt     : $PINGTUNNEL_ENCRYPT"
+    echo "Encrypt Key : $PINGTUNNEL_ENCRYPT_KEY"
     echo "---------------------------"
 }
 
@@ -121,15 +128,33 @@ main() {
         exit 1
     fi
 
-    # Prompt user for PingTunnel key
     while true; do
-        read -p "Enter a Password (Key) for PingTunnel (-key, numbers only): " PINGTUNNEL_KEY
+        read -p "Enter a key for PingTunnel (-key, numbers only): " PINGTUNNEL_KEY
         if [[ "$PINGTUNNEL_KEY" =~ ^[0-9]+$ ]]; then
             break
         else
             echo "Please enter numbers only."
         fi
     done
+
+    while true; do
+        read -p "Encryption mode (-encrypt) [aes128/aes256/chacha20]: " PINGTUNNEL_ENCRYPT
+        case "$PINGTUNNEL_ENCRYPT" in
+        aes128 | aes256 | chacha20) break ;;
+        *) echo "Please enter aes128, aes256, or chacha20." ;;
+        esac
+    done
+
+    read -p "Encryption key (-encrypt-key): " PINGTUNNEL_ENCRYPT_KEY
+
+    read -p "ICMP listen address (-icmp_l) [default: 0.0.0.0]: " PINGTUNNEL_ICMP_L
+    PINGTUNNEL_ICMP_L="${PINGTUNNEL_ICMP_L:-0.0.0.0}"
+
+    read -p "Forward TCP through proxy (-forward)? Leave empty to skip (e.g. socks5://localhost:2080) [y/N]: " _forward_yn
+    PINGTUNNEL_FORWARD=""
+    if [[ "$_forward_yn" =~ ^[Yy]$ ]]; then
+        read -p "Enter proxy URL (-forward): " PINGTUNNEL_FORWARD
+    fi
 
     install_pingtunnel
     create_service
