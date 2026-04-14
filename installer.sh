@@ -129,7 +129,8 @@ main() {
     fi
 
     while true; do
-        read -rp "Enter a key for PingTunnel (-key, numbers only): " PINGTUNNEL_KEY
+        read -rp "Enter a key for PingTunnel (-key, numbers only) [default: 0]: " PINGTUNNEL_KEY
+        PINGTUNNEL_KEY="${PINGTUNNEL_KEY:-0}"
         if [[ "$PINGTUNNEL_KEY" =~ ^[0-9]+$ ]]; then
             break
         else
@@ -138,7 +139,8 @@ main() {
     done
 
     while true; do
-        read -rp "Encryption mode (-encrypt) [aes128/aes256/chacha20]: " PINGTUNNEL_ENCRYPT
+        read -rp "Encryption mode (-encrypt) [aes128/aes256/chacha20, default: aes256]: " PINGTUNNEL_ENCRYPT
+        PINGTUNNEL_ENCRYPT="${PINGTUNNEL_ENCRYPT:-aes256}"
         case "$PINGTUNNEL_ENCRYPT" in
         aes128 | aes256 | chacha20) break ;;
         *) echo "Please enter aes128, aes256, or chacha20." ;;
