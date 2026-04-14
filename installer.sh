@@ -31,12 +31,6 @@ get_arch() {
     esac
 }
 
-# Get latest version from GitHub
-get_latest_version() {
-    curl -s https://api.github.com/repos/esrrhs/pingtunnel/releases/latest |
-        grep '"tag_name":' | sed -E 's/.*"v?([^"]+)".*/\1/'
-}
-
 # Ensure unzip is available
 ensure_unzip() {
     if ! command -v unzip >/dev/null 2>&1; then
@@ -55,9 +49,8 @@ ensure_unzip() {
 install_pingtunnel() {
     OS=$(get_os)
     ARCH=$(get_arch)
-    VERSION=$(get_latest_version)
     FILE="pingtunnel_${OS}_${ARCH}.zip"
-    URL="https://github.com/esrrhs/pingtunnel/releases/download/${VERSION}/${FILE}"
+    URL="https://github.com/esrrhs/pingtunnel/releases/latest/download/${FILE}"
 
     echo "Detected: OS=$OS ARCH=$ARCH"
     echo "Downloading: $URL"
