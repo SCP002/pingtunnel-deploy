@@ -129,7 +129,7 @@ main() {
     fi
 
     while true; do
-        read -p "Enter a key for PingTunnel (-key, numbers only): " PINGTUNNEL_KEY
+        read -rp "Enter a key for PingTunnel (-key, numbers only): " PINGTUNNEL_KEY
         if [[ "$PINGTUNNEL_KEY" =~ ^[0-9]+$ ]]; then
             break
         else
@@ -138,22 +138,22 @@ main() {
     done
 
     while true; do
-        read -p "Encryption mode (-encrypt) [aes128/aes256/chacha20]: " PINGTUNNEL_ENCRYPT
+        read -rp "Encryption mode (-encrypt) [aes128/aes256/chacha20]: " PINGTUNNEL_ENCRYPT
         case "$PINGTUNNEL_ENCRYPT" in
         aes128 | aes256 | chacha20) break ;;
         *) echo "Please enter aes128, aes256, or chacha20." ;;
         esac
     done
 
-    read -p "Encryption key (-encrypt-key): " PINGTUNNEL_ENCRYPT_KEY
+    read -rp "Encryption key (-encrypt-key): " PINGTUNNEL_ENCRYPT_KEY
 
-    read -p "ICMP listen address (-icmp_l) [default: 0.0.0.0]: " PINGTUNNEL_ICMP_L
+    read -rp "ICMP listen address (-icmp_l) [default: 0.0.0.0]: " PINGTUNNEL_ICMP_L
     PINGTUNNEL_ICMP_L="${PINGTUNNEL_ICMP_L:-0.0.0.0}"
 
-    read -p "Forward TCP through proxy (-forward)? Leave empty to skip (e.g. socks5://localhost:2080) [y/N]: " _forward_yn
+    read -rp "Forward TCP through proxy (-forward)? (e.g. socks5://localhost:2080) [y/N]: " _forward_yn
     PINGTUNNEL_FORWARD=""
     if [[ "$_forward_yn" =~ ^[Yy]$ ]]; then
-        read -p "Enter proxy URL (-forward): " PINGTUNNEL_FORWARD
+        read -rp "Enter proxy URL (-forward): " PINGTUNNEL_FORWARD
     fi
 
     install_pingtunnel
