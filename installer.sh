@@ -145,11 +145,8 @@ main() {
     read -rp "ICMP listen address (-icmp_l) [default: 0.0.0.0]: " PINGTUNNEL_ICMP_L
     PINGTUNNEL_ICMP_L="${PINGTUNNEL_ICMP_L:-0.0.0.0}"
 
-    read -rp "Forward TCP through proxy (-forward)? (e.g. socks5://localhost:2080) [y/N]: " _forward_yn
-    PINGTUNNEL_FORWARD=""
-    if [[ "$_forward_yn" =~ ^[Yy]$ ]]; then
-        read -rp "Enter proxy URL (-forward): " PINGTUNNEL_FORWARD
-    fi
+    read -rp "Forward TCP through proxy (-forward, e.g. socks5://localhost:2080) [default: empty]: " PINGTUNNEL_FORWARD
+    PINGTUNNEL_FORWARD="${PINGTUNNEL_FORWARD:-}"
 
     install_pingtunnel
     create_service

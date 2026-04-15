@@ -39,9 +39,9 @@ curl -fLO https://github.com/esrrhs/pingtunnel/releases/latest/download/pingtunn
 unzip pingtunnel_android_arm64.zip
 chmod +x ./pingtunnel
 # See `EXTERNAL_ADAPTER_IP` with `ifconfig` command
-./pingtunnel -type client -l :1081 -s SERVER_ADDRESS -icmp_l EXTERNAL_ADAPTER_IP -key KEY -nolog 1 -encrypt ENCRYPTION_MODE -encrypt-key ENCRYPTION_KEY -sock5 1
+./pingtunnel -type client -l :1090 -s SERVER_ADDRESS -icmp_l EXTERNAL_ADAPTER_IP -key KEY -nolog 1 -encrypt ENCRYPTION_MODE -encrypt-key ENCRYPTION_KEY -sock5 1
 ```
 
 * Install [Exclave](https://github.com/dyhkwong/Exclave)
-* In Exclave create a `SOCKS` config with address `127.0.0.1` and port `1081`.
+* In Exclave create a `SOCKS` config with address `127.0.0.1` and port `1090`.
 * Select newly created profile and connect to it.
