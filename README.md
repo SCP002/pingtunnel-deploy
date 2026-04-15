@@ -27,7 +27,7 @@ systemctl status pingtunnel
 
 ## Android client setup
 
-* Install [Termux](https://termux.dev)
+* Install [Termux](https://github.com/termux/termux-app)
 * In Termux, run:
 
 ```bash
