@@ -43,5 +43,5 @@ chmod +x ./pingtunnel
 ```
 
 * Install [Exclave](https://github.com/dyhkwong/Exclave)
-* In Exclave create a `SOCKS` config with address `127.0.0.1` and port `1090`.
+* In Exclave create a `SOCKS` config with address `127.0.0.1`, port `1090`, login as SOCKS_USER, password as SOCKS_PASSWORD.
 * Select newly created profile and connect to it.
