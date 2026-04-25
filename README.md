@@ -34,7 +34,7 @@ systemctl status pingtunnel
 termux-wake-lock
 pkg update
 pkg upgrade
-pkg install --yes curl unzip net-tools
+pkg install -y curl unzip net-tools
 curl -fLO https://github.com/esrrhs/pingtunnel/releases/latest/download/pingtunnel_android_arm64.zip
 unzip pingtunnel_android_arm64.zip
 chmod +x ./pingtunnel
